@@ -33,16 +33,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             
             <div class="form-group">
+              
               <label>Pilih Tempat</label>
               <select class="form-control" name="id_tempat" id="sTempat">
                 <option selected disabled>Pilih Tempat</option>
               </select>
             </div>
-            
-              <div class="form-group" id="fGambar">
-                <label for="gambar">Gambar</label>
-                <input type="file" class="form-control" name="gambar">
-              </div>
             <div class="form-group">
               <label for="nama">Nama Barang</label>
               <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Nama Barang" name="nama">

@@ -31,16 +31,10 @@ class Report extends CI_Controller
 
 	public function getHeader()
 	{
-		$lab = $this->m_inven->_getAllPlace(1)->result_array();
-		$k_7 = $this->m_inven->_getAllPlace(2)->result_array();
-		$k_8 = $this->m_inven->_getAllPlace(3)->result_array();
-		$k_9 = $this->m_inven->_getAllPlace(4)->result_array();
-		$data = array(
-			'lab' => $lab, 
-			'k_7' => $k_7,
-			'k_8' => $k_8,
-			'k_9' => $k_9
-		);
+		$wkwk = $this->m_inven->_getAll('tb_jenis_tempat')->result_array();
+		$wkwkw = $this->m_inven->_getAll('tb_tempat')->result_array();
+		$data['aitem'] = $wkwkw;
+		$data['tempat'] = $wkwk;
 		$this->load->view('template/header.php');
 		$this->load->view('template/sidebar.php', $data);
 	}

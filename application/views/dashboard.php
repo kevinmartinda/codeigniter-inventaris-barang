@@ -1,3 +1,4 @@
+<input type="hidden" name="" id="hid-id" value="<?=$page['id']?>">
   
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -16,10 +17,14 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-            <?php if ($page['id'] == 11 || $page['id'] == 22 || !$page['id'] == 33): ?>
-              
+            <?php if ($page['id'] == 99): ?>
               <div class="row">
                 <div class="col-md-5">
+                  Cari: <input type="text" name="" id="slab">
+                </div><br><br>
+              </div>
+              <div class="row">
+                <div class="col-md-5" id="dSearch">
                   <?php foreach ($konten as $barang): ?>
                     <div class="info-box bg-yellow">
                       <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
@@ -74,6 +79,7 @@
                 <?php endforeach ?>
                 </tbody>
               </table>
+              <a href='<?=base_url("index.php/barang/export_excel/v_stok/{$page['id']}")?>' class='btn btn-primary'><i class="fa fa-download"> Download Excel</i></a>
             <?php endif ?>
             </div>
             <!-- /.box-body -->

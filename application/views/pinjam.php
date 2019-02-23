@@ -24,8 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <tr> 
                   <th>No</th>
                   <th>Nama Barang</th>
+                  <th>Nama Peminjam</th>
                   <th>Peminjam</th>
-                  <th>Kelas</th>
                   <th>Waktu Pinjam</th>
                   <th>Waktu Kembali</th>
                 </tr>
@@ -74,53 +74,101 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <h3 class="modal-title">Tambah Pinjam</h3>
         </div>
         <div class="modal-body">
-          <form action="<?=base_url("index.php/barang/pinjam")?>" method="POST">
-            <div class="box-body">
-            <div class="form-group">
-              <label for="nis">NIS Siswa</label>
-              <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Masukkan NIS" name="id_siswa">
-            </div>
+          <div class="nav-tabs-custom">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab_1" data-toggle="tab">Siswa</a></li>
+    <li><a href="#tab_2" data-toggle="tab">Guru</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab_1">
+      <form action="<?=base_url("index.php/barang/pinjam")?>" method="POST">
+        <div class="box-body">
 
-            <!-- <div class="form-group">
-              <label for="exampleInputEmail1">Nama Siswa</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Nama" name="nama_siswa">
-            </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">NIS</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan NIS" name="id_siswa">
+        </div>
 
-            <div class="form-group">
-              <label>Pilih Jenis Tempat</label>
-              <select class="form-control" name="id_tempat" id="sPilih">
-                <option selected disabled>Pilih Tempat</option>
-              <?php// foreach ($pilih as $item): ?>
-                <?php// if ($item['id'] != 1): ?>
-                  <option value="<?php//echo $item['id']?>"><?php//echo$item['nama']?></option>
-                <?php //endif ?>
-              <?php //endforeach ?>
-              </select>
-            </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Nama Siswa</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Nama" name="nama_siswa">
+        </div>
+
+        <div class="form-group">
+          <label>Pilih Jenis Tempat</label>
+          <select class="form-control" name="id_pilih" id="sPilih">
+            <option selected disabled>Pilih Jenis Tempat</option>
+          <?php foreach ($pilih as $item): ?>
+            <?php if ($item['id'] == 2 || $item['id'] == 3 || $item['id'] == 4 ): ?>
+            <option value="<?=$item['id']?>"><?=$item['nama']?></option>
+            <?php endif ?>
+          <?php endforeach ?>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          
+          <label>Pilih Tempat</label>
+          <select class="form-control" name="id_tempat" id="sTempat">
+            <option selected disabled>Pilih Tempat</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Pilih Barang</label>
             
-            <div class="form-group">
-              <label>Pilih Tempat</label>
-              <select class="form-control" name="id_tempat" id="sTempat">
-                <option selected disabled>Pilih Tempat</option>
-              </select>
-            </div> -->
+          <select class="form-control" name="id_barang">
+          <?php foreach ($bangsat as $item): ?>
+            <option value="<?=$item['id']?>"><?=$item['nama']?></option>
+          <?php endforeach ?>
+          </select>
+        </div>
+        <div class="checkbox">
+          <label>
+            <button type="submit" class="btn btn-primary" onclick="add_pinjam()">Pinjam</button>
+          </label>
+        </div>
+      </div>
+      </form>
+    </div>
+    <!-- /.tab-pane -->
+    <div class="tab-pane" id="tab_2">
+      <form action="<?=base_url("index.php/barang/pinjam")?>" method="POST">
+        <div class="box-body">
 
-            <div class="form-group">
-              <label>Pilih Barang</label>
-                
-              <select class="form-control" name="id_barang">
-              <?php foreach ($bangsat as $item): ?>
-                <option value="<?=$item['id']?>"><?=$item['nama']?></option>
-              <?php endforeach ?>
-              </select>
-            </div>
-            <div class="checkbox">
-              <label>
-                <button type="submit" class="btn btn-primary" onclick="add_pinjam()">Pinjam</button>
-              </label>
-            </div>
-          </div>
-          </form>
+        <div class="form-group">
+          <label for="exampleInputEmail1">NIP</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan NIP" name="id_siswa">
+        </div>
+
+        <div class="form-group">
+          <label for="exampleInputEmail1">Nama Guru</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Nama" name="nama_siswa">
+        </div>
+
+        <input type="hidden" name="id_tempat" value="69">
+
+        <div class="form-group">
+          <label>Pilih Barang</label>
+            
+          <select class="form-control" name="id_barang">
+          <?php foreach ($bangsat as $item): ?>
+            <option value="<?=$item['id']?>"><?=$item['nama']?></option>
+          <?php endforeach ?>
+          </select>
+        </div>
+        <div class="checkbox">
+          <label>
+            <button type="submit" class="btn btn-primary" onclick="add_pinjam()">Pinjam</button>
+          </label>
+        </div>
+      </div>
+      </form>
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+  <!-- /.tab-content -->
+</div>
         </div>
       </div>
     </div>

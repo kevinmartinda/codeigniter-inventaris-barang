@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+ 
 class Home extends CI_Controller {
 	function __construct(){
 		parent::__construct();
@@ -18,16 +18,14 @@ class Home extends CI_Controller {
 
 	public function getHeader()
 	{
-		$lab = $this->m_inven->_getAllPlace(1)->result_array();
-		$k_7 = $this->m_inven->_getAllPlace(2)->result_array();
-		$k_8 = $this->m_inven->_getAllPlace(3)->result_array();
-		$k_9 = $this->m_inven->_getAllPlace(4)->result_array();
-		$data = array(
-			'lab' => $lab, 
-			'k_7' => $k_7,
-			'k_8' => $k_8,
-			'k_9' => $k_9
-		);
+		// $lab = $this->m_inven->_getAllPlace(1)->result_array();
+		// $k_7 = $this->m_inven->_getAllPlace(2)->result_array();
+		// $k_8 = $this->m_inven->_getAllPlace(3)->result_array();
+		// $k_9 = $this->m_inven->_getAllPlace(4)->result_array();
+		$wkwk = $this->m_inven->_getAll('tb_jenis_tempat')->result_array();
+		$wkwkw = $this->m_inven->_getAll('tb_tempat')->result_array();
+		$data['aitem'] = $wkwkw;
+		$data['tempat'] = $wkwk;
 		$this->load->view('template/header.php');
 		$this->load->view('template/sidebar.php', $data);
 	}
@@ -37,6 +35,17 @@ class Home extends CI_Controller {
 		$this->getHeader();
 		$this->load->view($page, $data);
 		$this->load->view('template/footer.php');
+	}
+
+	public function getTata()
+	{
+		if (!$this->session->has_userdata('logged')){
+			$this->load->view('login.php');
+		} else {
+			$data['barang'] = $this->m_inven->_getAll('tb_barang')->result_array();
+			
+			$this->renderPage('tata.php', $data);
+		}
 	}
 
 	public function getPinjam() 
@@ -94,6 +103,36 @@ class Home extends CI_Controller {
 
 	}
 
+	public function getTempat()
+	{
+		if (!$this->session->has_userdata('logged')){
+			$this->load->view('login.php');
+		} else {
+				$data['kategori'] = $this->m_inven->_getAll('tb_jenis_tempat')->result_array();
+			
+			$this->renderPage('tambah_tempat.php', $data);
+		}
+	}
+
+	public function getKategory(){
+		$data = $this->m_inven->_getAll('tb_jenis_tempat')->result_array();
+		echo json_encode($data);
+	}
+
+	public function tambah_tempat()
+	{
+		$this->load->model('crud');
+		$data = array(
+			'jenis' => $this->input->post('jenis'),
+			'nama' => $this->input->post('nama')
+		);
+
+		$insert = $this->crud->insertData('tb_tempat', $data);
+		if ($insert) {
+			redirect(base_url('index.php/tempat?status=success'));
+		}
+	}
+
 	public function reg()
 		{
 			$check = 'boing';
@@ -105,14 +144,28 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('crud');
 		$data = array(
-			'user' => $this->input->post('user'),
-			'pass' => password_hash($this->input->post('pass'), PASSWORD_DEFAULT),
+			'username' => $this->input->post('user'),
+			'password' => password_hash($this->input->post('pass'), PASSWORD_DEFAULT),
 			'level' => 'petugas'
 		);
 		$insert = $this->crud->insertData('tb_user', $data);
 		if ($insert) {
-			echo sukses;
+			echo "sukses";
 		}
+	}
+
+	public function add_category()
+	{
+		$this->load->model('crud');
+		
+		$data = array('nama' => $this->input->post('nama'));
+		$insert = $this->crud->insertData('tb_jenis_tempat', $data);
+			if ($insert) {
+				$report = array('status' => 'sukses');
+			} else {
+				$report = array('status' => 'gagal');
+			}
+		echo json_encode($report);
 	}
 
 	public function login()
@@ -143,5 +196,7 @@ class Home extends CI_Controller {
 		$this->session->unset_userdata('logged');
 		redirect(base_url());
 	}
+
+	
 }
 ?>

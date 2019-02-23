@@ -13,9 +13,24 @@ class M_Barang extends CI_Model
 		$this->load->database();
 	}
 
+	public function get_barang_from($type, $times, $interval)
+	{
+		$this->db->where("tgl_masuk between date_sub(curdate(), interval ".$times." ".$interval.") and curdate()+1");
+		$this->db->or_where("tgl_edit between date_sub(curdate(), interval ".$times." ".$interval.") and curdate()+1");
+		$this->db->having('jenis', $type);
+		$this->db->order_by('id', 'DESC');
+		return $this->db->get('v_transaksi');
+	}
+
 	public function getAllBarang($id)
 	{
 		$data = $this->db->get_where('v_stok', array('id_tempat' => $id, 'jumlah >' => 0));
+		return $data;
+	}
+
+	public function getStok($table, $id)
+	{
+		$data = $this->db->get_where($table, array('id_tempat' => $id, 'jumlah >' => 0));
 		return $data;
 	}
 
@@ -49,5 +64,13 @@ class M_Barang extends CI_Model
 	public function checkItem($param)
 	{
 		return $this->db->get_where('tb_stok', $param);
+	}
+
+	public function get_selected_item($table, $id, $keyword)
+	{
+		$this->db->like('nama_user', $keyword); 
+		$this->db->or_like('nama_barang', $keyword);
+		$this->db->having("id_tempat", $id);
+		return $this->db->get("v_stok");
 	}
 }

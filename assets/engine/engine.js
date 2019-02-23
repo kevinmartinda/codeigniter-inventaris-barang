@@ -1,3 +1,165 @@
+// function kTambah() {
+//   var surl = "http://localhost/inventaris/index.php/home/add_category/";
+//   var deta = new FormData($('#fTamKat')[0]);
+//   console.log(deta);
+//   console.log('asu');
+//   $.ajax({
+//     url: surl,
+//     type: "POST",
+//     data: deta,
+//     dataType: "JSON",
+//     success: function (response) {
+//       console.log(response)
+//     }
+//   })
+// }
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null) {
+       return null;
+    }
+    return decodeURI(results[1]) || 0;
+}
+
+$('#bTaEd').click(function () {
+  $('#edit').modal().show();
+  let id = $(this).attr('data-id');
+  $.ajax({
+    url: 'http://localhost/inventaris/index.php/barang/get-tata/'+id,
+    dataType: "JSON",
+    success: function (response) {
+      let neo = response.nama;
+      $('#edNam').val(neo);
+      
+    }
+  })
+})
+
+
+$("input[name='lapPilih']").click(function () {
+  let a = $("input[name='lapPilih']:checked").val()
+  console.log(a);
+  switch(a){
+    case 'week': 
+      $('#sLap').children().remove();
+      $('#sLap').append($("<option value='' disabled selected>Pilih Rentan Waktu</option>"))
+      for (var i = 1; i < 4; i++) { 
+        $('#sLap').append($("<option value='"+i+"'>"+i+" Minggu Terakhir</option>"));
+      }
+    break;
+    case 'month': 
+      $('#sLap').children().remove();
+      $('#sLap').append($("<option value='' disabled selected>Pilih Rentan Waktu</option>"))
+      for (var i = 1; i < 12; i++) { 
+        $('#sLap').append($("<option value='"+i+"'>"+i+" Bulan Terakhir</option>"));
+      }
+    break;
+  }  
+})
+
+$('#sLap').change(function () {
+  let surl = "http://localhost/inventaris/index.php/barang/get_barang_from/";
+  let type = $('#iLaphid').val();
+  let interval = $("input[name='lapPilih']:checked").val();
+  let times = $('#sLap  option:selected').val();
+  let t = $('#tb-laporan').DataTable();
+  $('#anim').show();
+  $.ajax({
+    url: surl + type + "/" + times + "/" + interval,
+    dataType: "JSON",
+    success: function (response) {
+      console.table(response)
+      t.clear().draw();
+      let no = 1;
+      for (var i = 0; i < response.length; i++) {
+        let tgl = response[i].tgl_edit == null ? response[i].tgl_masuk : response[i].tgl_edit
+        t.row.add([
+        no,
+        response[i].nama_barang,
+        response[i].merk,
+        response[i].nama_user,
+        response[i].warna,
+        response[i].tahun,
+        response[i].nama_tempat,
+        response[i].jumlah,
+        tgl
+        ]).draw(false);
+        no++;
+      }
+      $('#anim').hide();
+    } 
+  });
+})
+
+$('#cxbtn').click(function () {
+  $('#modal-tambah').modal().show();
+})
+
+$('#sTemKat').change(function () {
+  console.log($('#sTemKat').val())
+  if ($('#sTemKat').val() == 'lain') {
+    $('#modal-tambah').modal().show();
+  }
+})
+
+$('#bTamKat').click(function () {
+  $('#modal-tambah').modal().show();
+})
+
+$('#bTamKat').click(function () {
+  console.log($('#iTexCat').val())
+  $.ajax({
+      url: 'http://localhost/inventaris/index.php/home/add_category',
+      type: "POST",
+      data: $('#fTamKat').serialize(),
+      dataType: "JSON",
+      success: function (response) {
+        console.table(response);
+        $('#modal-tambah').modal('hide');
+        $.ajax({
+          url: 'http://localhost/inventaris/index.php/home/getKategory',
+          dataType: "JSON",
+          success: function (data) {
+            $('#sTemKat').children().remove();
+            console.log('children removed..');
+            for (i = 0; i < data.length; i++) { 
+              if(data[i].id == 2 || data[i].id == 3 ||data[i].id == 4){
+
+              } else {
+                $('#sTemKat').append($("<option value='"+data[i].id+"'>"+data[i].nama+"</option>"));
+              }
+            }
+            $('#sTemKat').append($("<option value='lain'>[+] Tambah Kategori</option>"));
+          }
+        })
+      }
+  })
+})
+
+$('#slab').keyup(function () {
+  var skey = $('#slab').val();
+  var id = $('#hid-id').val();
+  var surl = "http://localhost/inventaris/index.php/barang/search_lab/"+id+"/";
+  $.ajax({
+    url: surl + skey,
+    dataType: "JSON",
+    success: function (data) {
+      $('#dSearch').children().remove();
+      console.log("asu");
+      if (!data.error) { 
+        for (i = 0; i < data.length; i++) {
+           tgl = data[i].tgl_edit === null ? data[i].tgl_masuk : data[i].tgl_edit
+          $('#dSearch')
+              .append($("<div class='info-box bg-yellow'><span class='info-box-icon'><i class='ion ion-ios-pricetag-outline'></i></span><div class='info-box-content'><span class='info-box-text'>"+data[i].nama_user+"</span><span class='info-box-number'>"+data[i].nama_barang+"<i class='fa fa-pull-right'>"+data[i].jumlah+" unit</i></span><div class='progress'><div class='progress-bar' style='width: 50%'></div></div><span class='progress-description'>"+data[i].merk+" | "+data[i].warna+ "| <span><i class='fa fa-pull-right'>tgl : "+tgl+"</i></span></span></div></div>"));
+        }
+      } else {
+        $('#dSearch')
+              .append($("<div>hasil tidak ditemukan.</div>"));
+      }
+    } 
+  });
+})
+
 $( "#sPilih" ).change(function () {    
       var id = $('#sPilih').val();
       var surl = "http://localhost/inventaris/index.php/barang/get_item/";
@@ -22,6 +184,13 @@ $( "#sPilih" ).change(function () {
       //   $('#fGambar').hide()
       // }
     });
+
+$('#sTempat').change(function () {
+  var x  = $('#sTempat').val();
+  if (x == 69) {
+    
+  }
+})
 
       $( "#sTempatB" ).change(function () {    
       var id = $('#sTempatB').val();
@@ -64,11 +233,10 @@ $( "#sPilih" ).change(function () {
       });
 
 $(function () {
-
+    // $('#tvlab').style({display: block});
+    // $('#fGambar').hide();
     $('#sBarang').children().remove();
     $('#sBarang').append($("<option value='' selected disabled>Pilih Barang</option>"));
-
-    $('#fGambar').hide()
 
     $('.sidebar-menu').tree()
 
@@ -81,7 +249,25 @@ $(function () {
     $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
     //Money Euro
     $('[data-mask]').inputmask()
-
+    //DataTable
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+    $('#tb-laporan').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : true,
+      'processing'  : true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
     //Date range picker
     $('#reservation').daterangepicker()
     //Date range picker with time picker

@@ -19,7 +19,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example2" class="table table-bordered table-striped">
+              <div class="form-group">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="lapPilih" id="lapRpilihMing" value="week" checked> Minggu
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="lapPilih" id="lapRpilihBul" value="month" > Bulan
+                  </label>
+                </div>
+              </div>
+              <div class="form-group" id="grupSelect">
+                <input type="hidden" name="tipe" id="iLaphid" value="<?=$tipe?>">
+                <div class="row">
+                  <div class="col-md-4">
+              <select id="sLap" class="form-control" name="sweek">
+                <option value="" disabled selected>Pilih Rentan Waktu</option>
+                <option value="1">1 Minggu Terakhir</option>
+                <option value="2">2 Minggu Terakhir</option>
+                <option value="3">3 Minggu Terakhir</option>
+              </select>
+                  </div>
+                  <div class="col-md-8">
+              <span id="anim" hidden>Tunggu sebentar...</span>
+                  </div>
+                </div>
+              </div>
+              <table id="tb-laporan" class="table table-bordered table-striped">
                 <thead>
                 <tr> 
                   <th>No</th>

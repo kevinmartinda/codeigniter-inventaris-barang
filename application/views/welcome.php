@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <section class="content">
       <div class="box">
             <div class="box-header">
-        	     Welcome, <?=$user['nama']?>!
+        	     Selamat datang, <?=$user['nama']?>!
             </div>
         <div class="box-body">
           <p>
